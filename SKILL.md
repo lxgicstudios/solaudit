@@ -1,91 +1,110 @@
 ---
-name: Solidity Smart Contract Auditor
-description: Audit Solidity smart contracts for vulnerabilities. Detect reentrancy, overflow, access control issues. AI-powered security analysis. Free CLI tool.
-tags: [solidity, smart-contract, security, audit, ethereum, blockchain, defi]
+name: Solaudit - Smart Contract Security Scanner
+description: Solidity smart contract security auditor. Detect reentrancy, overflow, access control issues. 50+ vulnerability patterns. CI/CD ready. Free CLI tool.
 ---
 
-# Solidity Smart Contract Auditor
+# Solaudit
 
-Scan Solidity contracts for security vulnerabilities.
+Security scanner for Solidity smart contracts. Find vulnerabilities before deployment.
 
-**Reentrancy. Overflow. Access control. All the classics.**
-
-## Quick Start
+## Installation
 
 ```bash
 npm install -g solaudit-cli
 ```
 
-```bash
-# Audit a contract
-solaudit ./contracts/Token.sol
-
-# Audit entire project
-solaudit ./contracts/
-
-# Get detailed report
-solaudit ./Token.sol --verbose
-```
-
-## What It Detects
-
-### Critical
-- Reentrancy vulnerabilities
-- Integer overflow/underflow
-- Unchecked external calls
-- Delegatecall injection
-
-### High
-- Access control issues
-- tx.origin authentication
-- Front-running vulnerabilities
-- Flashloan attacks
-
-### Medium
-- Gas optimization issues
-- Floating pragma
-- Missing zero-address checks
-- Unused return values
-
-### Low
-- Style issues
-- Naming conventions
-- Documentation gaps
-
 ## Commands
 
+### Full Audit
+
 ```bash
-# Quick scan
-solaudit ./contract.sol
+solaudit audit Contract.sol
+solaudit audit ./contracts/ -r              # Recursive
+solaudit audit . -s high                    # Only high+ severity
+solaudit audit . --gas --best-practices     # Include all checks
+```
 
-# Full audit with gas analysis
-solaudit ./contract.sol --full
+### Quick Check
 
-# Export report
-solaudit ./contract.sol -o report.md
+```bash
+solaudit check Token.sol
+solaudit check Vault.sol -s critical
+```
 
-# JSON output for CI/CD
-solaudit ./contract.sol --json
+### Gas Analysis
+
+```bash
+solaudit gas Contract.sol
+```
+
+### List Patterns
+
+```bash
+solaudit patterns
+solaudit patterns --category reentrancy
+```
+
+## Vulnerability Detection
+
+### Critical
+- Reentrancy attacks
+- Unprotected selfdestruct
+- Delegatecall injection
+- Signature replay
+
+### High
+- Integer overflow/underflow
+- Access control issues
+- Unchecked return values
+- Price manipulation
+
+### Medium
+- tx.origin authentication
+- Floating pragma
+- Timestamp dependence
+- Front-running risks
+
+### Low
+- Unused variables
+- Missing events
+- Implicit visibility
+- Magic numbers
+
+## Output Formats
+
+```bash
+solaudit audit Contract.sol              # Table (default)
+solaudit audit Contract.sol -o json      # JSON
+solaudit audit Contract.sol -o markdown  # Markdown report
 ```
 
 ## CI/CD Integration
 
-```yaml
+```bash
+# Fail on critical issues
+solaudit audit ./contracts/ -s critical && echo "Passed"
+
 # GitHub Actions
-- run: npx solaudit-cli ./contracts/ --json > audit.json
+- run: npm install -g solaudit-cli
+- run: solaudit audit ./contracts/ -r -s high
 ```
 
-## When to Use This
+## Common Use Cases
 
-- Before mainnet deployment
-- Code review process
-- Security audits
-- Learning Solidity best practices
-- DeFi protocol analysis
+**Pre-deployment check:**
+```bash
+solaudit audit ./contracts/ -r -s high
+```
 
-## Supported Solidity Versions
+**Generate audit report:**
+```bash
+solaudit audit . -o markdown --save AUDIT.md
+```
 
-0.4.x through 0.8.x
+**Gas optimization:**
+```bash
+solaudit gas Contract.sol
+```
 
 ---
 
